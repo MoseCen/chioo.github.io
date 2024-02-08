@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带背景图片和时间显示的页面</title>
+    <style>
+        body {
+            background-image: url('a.jpg'); /* 你的背景图片路径 */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative; /* 为遮罩层定位提供基准 */
+        }
+        
+        /* 添加遮罩层以增强文字可读性 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* 半透明的黑色遮罩层 */
+            z-index: 0; /* 确保遮罩层位于背景和文字内容之间 */
+        }
+
+        #time {
+            position: relative; /* 确保时间显示在遮罩层之上 */
+            z-index: 1;
+            font-size: 48px;
+            color: #FFF; /* 白色字体提高对比度 */
+            text-shadow: 2px 2px 4px #000; /* 文字阴影增强可读性 */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* 确保h1元素内的文字在遮罩层之上显示 */
+        h1 {
+            position: relative;
+            z-index: 1;
+            color: white; /* 可根据需要调整颜色 */
+        }
+
+        /* 使内容垂直水平居中 */
+        .centered-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            function updateTime() {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var seconds = now.getSeconds();
+                hours = hours < 10 ? '0' + hours : hours;
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                document.getElementById('time').innerHTML = hours + ':' + minutes + ':' + seconds;
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
+        };
+    </script>
+</head>
+<body>
+    <div class="centered-content">
+        <h1>当前时间是：<span id="time"></span></h1>
+    </div>
+</body>
+</html>
