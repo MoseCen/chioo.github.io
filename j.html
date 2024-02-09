@@ -1,43 +1,88 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>距离春节倒计时</title>
+  <title>春节快乐</title>
   <style>
-   body {
-  margin: 0;
-  padding: 0;
-  background-image: url('m.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  font-family: Arial, sans-serif;
-  color: white;
-  text-align: center;
-  height: 100vh;
-  overflow: auto;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
-}
-
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('m.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      height: 100vh;
+      overflow: auto;
+      font-size:18px;
+    }
+    #greeting, #blessing {
+      margin-top: 50px;
+      opacity: 0;
+      animation: fade-in 2s ease forwards;
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
     #countdown {
-      font-size: 24px;
+      font-size: 18px;
       margin-top: 20px;
     }
+#blessing{
+	line-height:2;
+}
   </style>
 </head>
 <body>
-  <div id="countdown"></div>
+  
+<div id="greeting"></div>
+<div id="countdown"></div>
+<div id="blessing"></div>
 
-  <script>
+<script>
+  function typeWriter(elementId, text, interval, callback) {
+    let idx = 0;
+    let container = document.getElementById(elementId);
+    // 将换行符转换为<br>标签以在HTML中正确显示
+    text = text.replace(/\n/g, '<br>');
+
+    function typing() {
+      if (idx < text.length) {
+        // 处理HTML标签，确保一次性插入完整的标签
+        if(text[idx] === '<') {
+          let endTagIdx = text.indexOf('>', idx);
+          container.innerHTML += text.substring(idx, endTagIdx + 1);
+          idx = endTagIdx;
+        } else {
+          container.innerHTML += text.charAt(idx);
+        }
+        idx++;
+        setTimeout(typing, interval);
+      } else if (callback) {
+        callback(); // 打字结束后调用回调函数
+      }
+    }
+
+    typing();
+  }
+
+  function showBlessing() {
+    const blessingText = "旦迈月征，朝暮轮转\n时光来去匆匆，旧日已成永恒\n新的一年\n祝你\n欢愉且如意，万事尽可期！";
+    typeWriter('blessing', blessingText, 300); // 显示祝福语
+  }
+
+  function showTime() {
     // 计算距离春节的剩余时间
     function getTimeUntilSpringFestival() {
       const now = new Date();
@@ -52,10 +97,13 @@
 
       document.getElementById('countdown').innerHTML = `距离春节还有 ${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒`;
     }
-
-    // 每秒更新一次倒计时
+    getTimeUntilSpringFestival();
     setInterval(getTimeUntilSpringFestival, 1000);
-  </script>
+    setTimeout(showBlessing, 2000); // 在显示时间后延迟一段时间开始显示祝福语
+  }
+
+  // 调用函数，逐字显示，并在完成后显示时间
+  typeWriter('greeting', '小猫同学，除夕快乐', 300, showTime); // 最后一个参数是打字完成后要调用的函数
+</script>
 </body>
 </html>
-
